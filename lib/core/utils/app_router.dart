@@ -1,6 +1,6 @@
 import 'package:aban_tether_challenge/features/auth/presentation/pages/login_page.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/pages/profile_page.dart';
-import 'package:aban_tether_challenge/features/crypto/presentation/pages/home_page.dart';
+import 'package:aban_tether_challenge/features/coin/presentation/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
