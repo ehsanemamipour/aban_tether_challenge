@@ -15,3 +15,15 @@ class LoginEvent extends AuthEvent {
   @override
   List<Object> get props => [email, password];
 }
+
+class GetUserInfoEvent extends AuthEvent {
+  const GetUserInfoEvent();
+}
+
+class AddUserPhoneEvent extends AuthEvent {
+  const AddUserPhoneEvent({required this.phone});
+  final String phone;
+
+  @override
+  List<Object> get props => [phone];
+}

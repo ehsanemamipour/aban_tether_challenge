@@ -1,3 +1,4 @@
+import 'package:aban_tether_challenge/features/auth/domain/entities/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
@@ -14,6 +15,13 @@ class GetTokenState extends AuthState {
   final String token;
   @override
   List<Object> get props => [token];
+}
+
+class GetUserState extends AuthState {
+  const GetUserState({required this.user});
+  final User user;
+  @override
+  List<Object> get props => [user];
 }
 
 class AuthLoading extends AuthState {}
