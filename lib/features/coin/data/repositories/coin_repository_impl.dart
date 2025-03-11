@@ -35,7 +35,15 @@ class CoinRepositoryImpl extends CoinRepository {
   Future<Either<Failure, void>> deleteCoinFromFavorite(int id) async {
     return requestToServer(
       await networkInfo.hasConnection,
-      () => remoteDataSource.deleteCoinFromFavorite(id),
+      () async {
+        var list = await remoteDataSource.getFavoriteCoinList();
+
+        for (var element in list) {
+          if (element.cryptocurrencyId == id) {
+            return remoteDataSource.deleteCoinFromFavorite(element.id);
+          }
+        }
+      },
     );
   }
 }

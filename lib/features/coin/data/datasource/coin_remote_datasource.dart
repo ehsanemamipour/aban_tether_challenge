@@ -2,9 +2,11 @@ import 'package:aban_tether_challenge/core/consts/consts.dart';
 import 'package:aban_tether_challenge/core/errors/exceptions.dart';
 import 'package:aban_tether_challenge/core/services/http_service.dart';
 import 'package:aban_tether_challenge/features/coin/data/models/coin_model.dart';
+import 'package:aban_tether_challenge/features/coin/data/models/favorite_coin_model.dart';
 
 abstract class CoinRemoteDataSource {
   Future<List<CoinModel>> getCoinList();
+  Future<List<FavoriteCoinModel>> getFavoriteCoinList();
   Future<void> addCoinToFavorite(int id);
   Future<void> deleteCoinFromFavorite(int id);
 }
@@ -29,6 +31,21 @@ class CoinRemoteDataSourceImpl extends CoinRemoteDataSource {
   }
 
   @override
+  Future<List<FavoriteCoinModel>> getFavoriteCoinList() async {
+    try {
+      final result = await httpService.getData(ServerPaths.favoriteCoin);
+      List<dynamic> data = result.data;
+      var coins = data.map((coin) {
+        return FavoriteCoinModel.fromJson(coin);
+      }).toList();
+      print(coins);
+      return coins;
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
   Future<void> addCoinToFavorite(int id) async {
     try {
       await httpService.postData(ServerPaths.favoriteCoin, data: {
@@ -42,7 +59,7 @@ class CoinRemoteDataSourceImpl extends CoinRemoteDataSource {
   @override
   Future<void> deleteCoinFromFavorite(int id) async {
     try {
-      await httpService.deleteData(ServerPaths.favoriteCoin + id.toString());
+      await httpService.deleteData('${ServerPaths.favoriteCoin}/$id');
     } catch (e) {
       throw ServerException(message: e.toString());
     }
