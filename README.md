@@ -1,17 +1,33 @@
-# aban_tether_challenge
+Aban Tether Challenge
+========
 
-A new Flutter project.
+Aban Tether is a challenge to demonstrate skills in Flutter
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Features
+--------
 
-A few resources to get you started if this is your first Flutter project:
+- Clean architecture
+- Bloc state management
+- Get-it service locator
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Configuration
+------------
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# aban_tether_challenge
+To run this application, you’ll need to have Dart and Flutter installed on your computer. After this run these commands:
+
+    flutter pub get
+    flutter pub run build_runner build
+
+if anything goes wrong please run:
+
+    flutter clean
+    flutter pub get
+    flutter pub run build_runner build --delete-conflicting-outputs
+
+
+Support
+-------
+
+If you are having issues, please let me know.
+I have a mailing address located at: ehsan.emami.p@gmail.com
