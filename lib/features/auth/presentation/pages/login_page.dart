@@ -6,20 +6,45 @@ import 'package:aban_tether_challenge/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) return 'Email is required';
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) return 'Password is required';
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = Theme.of(context);
     return Scaffold(
-      appBar: _buildAppBar(theme),
-      backgroundColor: theme.black,
+      appBar: _buildAppBar(appTheme),
+      backgroundColor: appTheme.black,
       body: BlocProvider(
         create: (_) => serviceLocator<AuthBloc>(),
         child: BlocConsumer<AuthBloc, AuthState>(
@@ -33,10 +58,7 @@ class LoginPage extends StatelessWidget {
           builder: (context, state) {
             return _buildLoginForm(
               context: context,
-              theme: theme,
-              emailController: emailController,
-              passwordController: passwordController,
-              formKey: formKey,
+              appTheme: appTheme,
               isLoading: state is AuthLoading,
             );
           },
@@ -45,93 +67,80 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-
-  AppBar _buildAppBar(ThemeData theme) {
+  AppBar _buildAppBar(ThemeData appTheme) {
     return AppBar(
       title: Text(
         'Login',
-        style: theme.medium20,
+        style: appTheme.medium20,
       ),
-      backgroundColor: theme.black,
+      backgroundColor: appTheme.black,
       centerTitle: true,
       elevation: 4.0,
     );
   }
 
-
   Widget _buildLoginForm({
     required BuildContext context,
-    required ThemeData theme,
-    required TextEditingController emailController,
-    required TextEditingController passwordController,
-    required GlobalKey<FormState> formKey,
+    required ThemeData appTheme,
     required bool isLoading,
   }) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
-        key: formKey,
+        key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextFormField(
-              controller: emailController,
-              style: theme.medium16,
+              controller: _emailController,
+              style: appTheme.medium16,
               decoration: InputDecoration(
                 labelText: 'Email',
-                labelStyle: theme.medium16,
-                border: OutlineInputBorder(),
+                labelStyle: appTheme.medium16,
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value == null || value.isEmpty) return 'Email is required';
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value)) {
-                  return 'Enter a valid email';
-                }
-                return null;
-              },
+              validator: _validateEmail,
             ),
             const SizedBox(height: 16.0),
             TextFormField(
-              controller: passwordController,
-              style: theme.medium16,
+              controller: _passwordController,
+              style: appTheme.medium16,
               decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: theme.medium16,
-                border: OutlineInputBorder(),
+                labelStyle: appTheme.medium16,
+                border: const OutlineInputBorder(),
               ),
               obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) return 'Password is required';
-                return null;
-              },
+              validator: _validatePassword,
             ),
             const SizedBox(height: 24.0),
             isLoading
-                ? CircularProgressIndicator(color: theme.white)
+                ? CircularProgressIndicator(color: appTheme.white)
                 : ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.purple,
+                      backgroundColor: appTheme.purple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 30.0),
+                        vertical: 15.0,
+                        horizontal: 30.0,
+                      ),
                     ),
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         BlocProvider.of<AuthBloc>(context).add(
                           LoginEvent(
-                            email: emailController.text.trim(),
-                            password: passwordController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
                           ),
                         );
                       }
                     },
                     child: Text(
                       'Login',
-                      style: theme.medium16,
+                      style: appTheme.medium16,
                     ),
                   ),
           ],
@@ -143,7 +152,7 @@ class LoginPage extends StatelessWidget {
   void _showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Text('Login Failed'),
         content: Text(message),
         actions: [

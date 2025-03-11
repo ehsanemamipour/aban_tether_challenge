@@ -1,5 +1,5 @@
-
 import 'package:aban_tether_challenge/core/services/http_service.dart';
+import 'package:aban_tether_challenge/core/storage/secure_storage.dart';
 import 'package:aban_tether_challenge/core/utils/network_utils.dart';
 import 'package:aban_tether_challenge/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:aban_tether_challenge/features/auth/data/repositories/auth_repository_impl.dart';
@@ -20,17 +20,18 @@ Future<void> init() async {
 
 void _injectMeme() {
   //bloc
-  serviceLocator
-      .registerFactory(() => AuthBloc(fetchToken: serviceLocator()));
+  serviceLocator.registerFactory(() => AuthBloc(fetchToken: serviceLocator()));
+
+  serviceLocator.registerLazySingleton(() => SecureStorage());
   //usecase
-  serviceLocator
-      .registerLazySingleton(() => FetchToken(repository: serviceLocator()));
+  serviceLocator.registerLazySingleton(() => FetchToken(repository: serviceLocator()));
 
   //repositories
   serviceLocator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       networkInfo: serviceLocator(),
       remoteDataSource: serviceLocator(),
+      secureStorage: serviceLocator(),
     ),
   );
   //datasources
@@ -43,6 +44,8 @@ void _injectExternalLibraries() {
   serviceLocator.registerLazySingleton<HTTPService>(
     () => DioService(
       dio: Dio(),
+      secureStorage: serviceLocator(),
+
     ),
   );
   //Data Connection Checker
@@ -51,6 +54,6 @@ void _injectExternalLibraries() {
 
 void _injectSystemStatus() {
   // system Statuses
-  serviceLocator.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImpl(dataConnectionChecker: serviceLocator()));
+  serviceLocator
+      .registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(dataConnectionChecker: serviceLocator()));
 }

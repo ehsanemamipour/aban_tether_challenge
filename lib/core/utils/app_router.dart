@@ -2,7 +2,8 @@ import 'package:aban_tether_challenge/features/auth/presentation/pages/login_pag
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
-  static GoRouter getRouter() {
+  static GoRouter getRouter(isLoggedIn) {
+    
     return GoRouter(
       initialLocation: '/',
       routes: <RouteBase>[
