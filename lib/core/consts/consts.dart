@@ -1,3 +1,3 @@
 class ServerPaths {
-  static const memes = 'https://meme-api.com/gimme/5';
+  static const login = 'https://x8ki-letl-twmt.n7.xano.io/api:0uinMmtC/auth/login';
 }
