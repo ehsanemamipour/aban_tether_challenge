@@ -11,11 +11,10 @@ class CoinRepositoryImpl extends CoinRepository {
   CoinRepositoryImpl({
     required this.remoteDataSource,
     required this.networkInfo,
-    required this.secureStorage,
   });
+  
   final CoinRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
-  final SecureStorage secureStorage;
 
   @override
   Future<Either<Failure, List<Coin>>> getCoinList() async {
