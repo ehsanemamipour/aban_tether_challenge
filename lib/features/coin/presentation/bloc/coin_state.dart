@@ -10,8 +10,6 @@ abstract class CoinState extends Equatable {
 
 class CoinInitial extends CoinState {}
 
-
-
 class CoinLoaded extends CoinState {
   const CoinLoaded({required this.coins});
   final List<Coin> coins;
@@ -21,7 +19,13 @@ class CoinLoaded extends CoinState {
 
 class CoinLoading extends CoinState {}
 
-class CoinFavoriteSuccess extends CoinState {}
+class CoinFavoriteSuccess extends CoinState {
+  const CoinFavoriteSuccess({required this.id});
+  final int id;
+  @override
+  List<Object> get props => [id];
+}
+
 class CoinError extends CoinState {
   const CoinError({required this.message});
   final String message;

@@ -1,11 +1,10 @@
 import 'package:aban_tether_challenge/core/theme/theme.dart';
-import 'package:aban_tether_challenge/features/coin/domain/entities/coin.dart';
 import 'package:aban_tether_challenge/features/coin/presentation/bloc/coin_bloc.dart';
 import 'package:aban_tether_challenge/features/coin/presentation/bloc/coin_event.dart';
 import 'package:aban_tether_challenge/features/coin/presentation/bloc/coin_state.dart';
+import 'package:aban_tether_challenge/features/coin/presentation/widgets/coin_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 class CoinPage extends StatefulWidget {
@@ -19,8 +18,6 @@ class _CoinPageState extends State<CoinPage> {
   @override
   void initState() {
     super.initState();
-    // Dispatch an event to fetch coins when the screen is loaded.
-    // Make sure that CoinsBloc is provided in the widget tree.
     context.read<CoinBloc>().add(GetCoinListEvent());
   }
 
@@ -41,6 +38,9 @@ class _CoinPageState extends State<CoinPage> {
       ),
       backgroundColor: appTheme.black,
       body: BlocConsumer<CoinBloc, CoinState>(
+        listenWhen: (previous, current) {
+          return current is CoinError;
+        },
         listener: (context, state) {
           if (state is CoinError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -48,49 +48,28 @@ class _CoinPageState extends State<CoinPage> {
             );
           }
         },
+        buildWhen: (previous, current) {
+          return current is CoinLoading ||
+                 current is CoinLoaded ||
+                 current is CoinError ||
+                 current is CoinInitial;
+        },
         builder: (context, state) {
           if (state is CoinLoading) {
             return Center(
               child: CircularProgressIndicator(color: appTheme.white),
             );
           } else if (state is CoinLoaded) {
-            List<Coin> coins = state.coins;
             return ListView.separated(
-              itemCount: coins.length,
+              itemCount: state.coins.length,
               separatorBuilder: (_, __) => Divider(
                 color: appTheme.gray500,
               ),
               itemBuilder: (context, index) {
-                final coin = coins[index];
-                return ListTile(
-                  leading: SvgPicture.network(
-                    coin.iconAddress,
-                    width: 40,
-                    height: 40,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                  ),
-                  title: Text(
-                    coin.name,
-                    style: appTheme.medium16.copyWith(color: appTheme.white),
-                  ),
-                  subtitle: Text(
-                    '${coin.symbol} • \$${coin.price.toStringAsFixed(2)}',
-                    style: appTheme.medium16.copyWith(color: appTheme.white70),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      coin.isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: coin.isFavorite ? Colors.red : appTheme.white,
-                    ),
-                    onPressed: () {
-                      // Toggle favorite status using respective events.
-                      if (coin.isFavorite) {
-                        context.read<CoinBloc>().add(DeleteFavoriteEvent(coinId: coin.id));
-                      } else {
-                        context.read<CoinBloc>().add(AddFavoriteEvent(coinId: coin.id));
-                      }
-                    },
-                  ),
+                final coin = state.coins[index];
+                return CoinListItem(
+                  key: ValueKey(coin.id), // Add key for better identity
+                  coin: coin,
                 );
               },
             );

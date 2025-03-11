@@ -32,16 +32,27 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
     AddFavoriteEvent event,
     Emitter<CoinState> emit,
   ) async {
-    emit(CoinLoading());
     final result = await addCoinToFavorite(AddCoinToFavoriteParams(
       id: event.coinId,
     ));
 
-    emit(
-      result.fold(
-        (error) => CoinError(message: error.message),
-        (token) => CoinFavoriteSuccess(),
-      ),
+    result.fold(
+      (error) => emit(CoinError(message: error.message)),
+      (success) {
+        if (state is CoinLoaded) {
+          final currentState = state as CoinLoaded;
+          final updatedCoins = currentState.coins.map((coin) {
+            if (coin.id == event.coinId) {
+              return coin.copyWith(isFavorite: true);
+            }
+            return coin;
+          }).toList();
+          
+          emit(CoinLoaded(coins: updatedCoins));
+        }
+        
+        emit(CoinFavoriteSuccess(id: event.coinId));
+      },
     );
   }
 
@@ -49,16 +60,27 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
     DeleteFavoriteEvent event,
     Emitter<CoinState> emit,
   ) async {
-    emit(CoinLoading());
     final result = await deleteCoinFromFavorite(DeleteCoinFromFavoriteParams(
       id: event.coinId,
     ));
 
-    emit(
-      result.fold(
-        (error) => CoinError(message: error.message),
-        (token) => CoinFavoriteSuccess(),
-      ),
+    result.fold(
+      (error) => emit(CoinError(message: error.message)),
+      (success) {
+        if (state is CoinLoaded) {
+          final currentState = state as CoinLoaded;
+          final updatedCoins = currentState.coins.map((coin) {
+            if (coin.id == event.coinId) {
+              return coin.copyWith(isFavorite: false);
+            }
+            return coin;
+          }).toList();
+          
+          emit(CoinLoaded(coins: updatedCoins));
+        }
+        
+        emit(CoinFavoriteSuccess(id: event.coinId));
+      },
     );
   }
 
