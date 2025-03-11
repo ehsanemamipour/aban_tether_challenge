@@ -5,6 +5,7 @@ import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_state
 import 'package:aban_tether_challenge/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is GetTokenState) {
-              Navigator.pushReplacementNamed(context, '/home');
+              context.go('/homePage');
             } else if (state is AuthError) {
               _showErrorDialog(context, state.message);
             }

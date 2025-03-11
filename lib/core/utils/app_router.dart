@@ -1,16 +1,16 @@
 import 'package:aban_tether_challenge/features/auth/presentation/pages/login_page.dart';
+import 'package:aban_tether_challenge/features/auth/presentation/pages/profile_page.dart';
+import 'package:aban_tether_challenge/features/crypto/presentation/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static GoRouter getRouter(isLoggedIn) {
-    
     return GoRouter(
       initialLocation: '/',
       routes: <RouteBase>[
         GoRoute(
           path: '/',
-          // builder: (context, state) => (isUserTappedFirstTime && !isUserLoggedIn) ? LoginPage() : MainPage(),
-          builder: (context, state) => LoginPage(),
+          builder: (context, state) => isLoggedIn ? HomePage() : LoginPage(),
           routes: <RouteBase>[
             // GoRoute(
             //   path: 'mainPage',
@@ -19,6 +19,16 @@ class AppRouter {
 
             //   ],
             // ),
+            GoRoute(
+              path: 'homePage',
+              builder: (context, state) => HomePage(),
+              routes: <RouteBase>[
+                GoRoute(
+                  path: 'profilePage',
+                  builder: (context, state) => ProfilePage(),
+                ),
+              ],
+            ),
           ],
         ),
       ],
