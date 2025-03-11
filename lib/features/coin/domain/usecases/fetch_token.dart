@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 
 class FetchToken implements UseCase<String, FethTokenParams> {
   FetchToken({required this.repository});
-  final AuthRepository repository;
+  final CoinRepository repository;
 
   @override
   Future<Either<Failure, String>> call(params) {

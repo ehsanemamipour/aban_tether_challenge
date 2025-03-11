@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 
 class AddUserPhone implements UseCase<User, AddUserPhoneParams> {
   AddUserPhone({required this.repository});
-  final AuthRepository repository;
+  final CoinRepository repository;
 
   @override
   Future<Either<Failure, User>> call(params) {

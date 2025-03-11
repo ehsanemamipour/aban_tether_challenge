@@ -5,5 +5,5 @@ import 'package:dartz/dartz.dart';
 abstract class AuthRepository {
   Future<Either<Failure, String>> fetchToken(String email, String password);
   Future<Either<Failure, User>> fetchUserInfo();
-  Future<Either<Failure, User>> addUserPhoneNumber( String phoneNumber);
+  Future<Either<Failure, User>> addUserPhoneNumber(String phoneNumber);
 }

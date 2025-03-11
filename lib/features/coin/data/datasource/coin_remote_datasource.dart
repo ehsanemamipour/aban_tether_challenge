@@ -3,18 +3,18 @@ import 'package:aban_tether_challenge/core/errors/exceptions.dart';
 import 'package:aban_tether_challenge/core/services/http_service.dart';
 import 'package:aban_tether_challenge/features/coin/data/models/coin_model.dart';
 
-abstract class AuthRemoteDataSource {
-  Future<List<CoinModel>> fetchCoinList();
+abstract class CoinRemoteDataSource {
+  Future<List<CoinModel>> getCoinList();
   Future<void> addCoinToFavorite(int id);
   Future<void> deleteCoinFromFavorite(int id);
 }
 
-class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
-  AuthRemoteDataSourceImpl({required this.httpService});
+class CoinRemoteDataSourceImpl extends CoinRemoteDataSource {
+  CoinRemoteDataSourceImpl({required this.httpService});
   final HTTPService httpService;
 
   @override
-  Future<List<CoinModel>> fetchCoinList() async {
+  Future<List<CoinModel>> getCoinList() async {
     try {
       final result = await httpService.getData(ServerPaths.coinList);
 

@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 
 class FetchUserInfo implements UseCase<User, NoParams> {
   FetchUserInfo({required this.repository});
-  final AuthRepository repository;
+  final CoinRepository repository;
 
   @override
   Future<Either<Failure, User>> call(params) {

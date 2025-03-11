@@ -2,46 +2,42 @@ import 'package:aban_tether_challenge/core/errors/errors.dart';
 import 'package:aban_tether_challenge/core/storage/secure_storage.dart';
 import 'package:aban_tether_challenge/core/utils/network_utils.dart';
 import 'package:aban_tether_challenge/core/utils/repository_utils.dart';
-import 'package:aban_tether_challenge/features/auth/data/datasource/auth_remote_datasource.dart';
-import 'package:aban_tether_challenge/features/auth/domain/entities/user.dart';
-import 'package:aban_tether_challenge/features/auth/domain/repositories/auth_repository.dart';
+import 'package:aban_tether_challenge/features/coin/data/datasource/coin_remote_datasource.dart';
+import 'package:aban_tether_challenge/features/coin/domain/entities/coin.dart';
+import 'package:aban_tether_challenge/features/coin/domain/repositories/coin_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class AuthRepositoryImpl extends AuthRepository {
-  AuthRepositoryImpl({
+class CoinRepositoryImpl extends CoinRepository {
+  CoinRepositoryImpl({
     required this.remoteDataSource,
     required this.networkInfo,
     required this.secureStorage,
   });
-  final AuthRemoteDataSource remoteDataSource;
+  final CoinRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
   final SecureStorage secureStorage;
 
   @override
-  Future<Either<Failure, String>> fetchToken(String email, String password) async {
+  Future<Either<Failure, List<Coin>>> getCoinList() async {
     return requestToServer(
       await networkInfo.hasConnection,
-      () async {
-        final authToken = await remoteDataSource.fetchToken(email, password);
-        await secureStorage.saveToken(authToken);
-        return authToken;
-      },
+      () => remoteDataSource.getCoinList(),
     );
   }
 
   @override
-  Future<Either<Failure, User>> addUserPhoneNumber(String phoneNumber) async {
+  Future<Either<Failure, void>> addCoinTofavorite(int id) async {
     return requestToServer(
       await networkInfo.hasConnection,
-      () => remoteDataSource.addUserPhoneNumber(phoneNumber),
+      () => remoteDataSource.addCoinToFavorite(id),
     );
   }
 
   @override
-  Future<Either<Failure, User>> fetchUserInfo() async {
+  Future<Either<Failure, void>> deleteCoinFromFavorite(int id) async {
     return requestToServer(
       await networkInfo.hasConnection,
-      () => remoteDataSource.fetchUserInfo(),
+      () => remoteDataSource.deleteCoinFromFavorite(id),
     );
   }
 }

@@ -37,7 +37,7 @@ void _injectLogin() {
   serviceLocator.registerLazySingleton(() => AddUserPhone(repository: serviceLocator()));
 
   //repositories
-  serviceLocator.registerLazySingleton<AuthRepository>(
+  serviceLocator.registerLazySingleton<CoinRepository>(
     () => AuthRepositoryImpl(
       networkInfo: serviceLocator(),
       remoteDataSource: serviceLocator(),
