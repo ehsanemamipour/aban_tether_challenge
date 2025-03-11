@@ -38,7 +38,6 @@ class CoinRemoteDataSourceImpl extends CoinRemoteDataSource {
       var coins = data.map((coin) {
         return FavoriteCoinModel.fromJson(coin);
       }).toList();
-      print(coins);
       return coins;
     } catch (e) {
       throw ServerException(message: e.toString());
