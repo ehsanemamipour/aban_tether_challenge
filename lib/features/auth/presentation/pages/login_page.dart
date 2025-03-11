@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is GetTokenState) {
-              context.go('/homePage');
+              context.go('/coinPage');
             } else if (state is AuthError) {
               _showErrorDialog(context, state.message);
             }

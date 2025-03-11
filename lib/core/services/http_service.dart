@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 abstract class HTTPService<T> {
   Future<T> getData(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? header});
   Future<T> postData(String url, {dynamic data, Map<String, dynamic>? header});
-  Future<T> patchData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header});
+  Future<T> putData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header});
 }
 
 class DioService implements HTTPService {
@@ -51,7 +51,7 @@ class DioService implements HTTPService {
   }
 
   @override
-  Future patchData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header}) {
-    return dio.patch(url, data: data, options: Options(headers: header));
+  Future putData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header}) {
+    return dio.put(url, data: data, options: Options(headers: header));
   }
 }

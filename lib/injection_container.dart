@@ -6,6 +6,7 @@ import 'package:aban_tether_challenge/features/auth/data/repositories/auth_repos
 import 'package:aban_tether_challenge/features/auth/domain/repositories/auth_repository.dart';
 import 'package:aban_tether_challenge/features/auth/domain/usecases/fetch_token.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:aban_tether_challenge/features/coin/presentation/bloc/coin_bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -15,10 +16,11 @@ final serviceLocator = GetIt.instance;
 Future<void> init() async {
   _injectExternalLibraries();
   _injectSystemStatus();
-  _injectMeme();
+  _injectLogin();
+  _injectCoin();
 }
 
-void _injectMeme() {
+void _injectLogin() {
   //bloc
   serviceLocator.registerFactory(() => AuthBloc(fetchToken: serviceLocator()));
 
@@ -40,12 +42,16 @@ void _injectMeme() {
   );
 }
 
+void _injectCoin() {
+  //bloc
+  serviceLocator.registerFactory(() => CoinBloc(fetchToken: serviceLocator()));
+}
+
 void _injectExternalLibraries() {
   serviceLocator.registerLazySingleton<HTTPService>(
     () => DioService(
       dio: Dio(),
       secureStorage: serviceLocator(),
-
     ),
   );
   //Data Connection Checker

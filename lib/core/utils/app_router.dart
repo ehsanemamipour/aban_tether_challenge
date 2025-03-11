@@ -1,6 +1,6 @@
 import 'package:aban_tether_challenge/features/auth/presentation/pages/login_page.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/pages/profile_page.dart';
-import 'package:aban_tether_challenge/features/coin/presentation/pages/home_page.dart';
+import 'package:aban_tether_challenge/features/coin/presentation/pages/coin_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -10,7 +10,7 @@ class AppRouter {
       routes: <RouteBase>[
         GoRoute(
           path: '/',
-          builder: (context, state) => isLoggedIn ? HomePage() : LoginPage(),
+          builder: (context, state) => isLoggedIn ? CoinPage() : LoginPage(),
           routes: <RouteBase>[
             // GoRoute(
             //   path: 'mainPage',
@@ -20,8 +20,8 @@ class AppRouter {
             //   ],
             // ),
             GoRoute(
-              path: 'homePage',
-              builder: (context, state) => HomePage(),
+              path: 'coinPage',
+              builder: (context, state) => CoinPage(),
               routes: <RouteBase>[
                 GoRoute(
                   path: 'profilePage',
