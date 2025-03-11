@@ -17,9 +17,10 @@ class CoinRemoteDataSourceImpl extends CoinRemoteDataSource {
   Future<List<CoinModel>> getCoinList() async {
     try {
       final result = await httpService.getData(ServerPaths.coinList);
-
-      List<dynamic> data = result.body;
-      var coins = data.map((coin) => CoinModel.fromJson(coin)).toList();
+      List<dynamic> data = result.data;
+      var coins = data.map((coin) {
+        return CoinModel.fromJson(coin);
+      }).toList();
 
       return coins;
     } catch (e) {

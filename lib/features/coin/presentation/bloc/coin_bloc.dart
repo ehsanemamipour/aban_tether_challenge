@@ -1,5 +1,4 @@
 import 'package:aban_tether_challenge/core/utils/usecase_utils.dart';
-import 'package:aban_tether_challenge/features/auth/domain/usecases/fetch_token.dart';
 import 'package:aban_tether_challenge/features/coin/domain/usecases/add_coin_to_favorite.dart';
 import 'package:aban_tether_challenge/features/coin/domain/usecases/delete_coin_from_favorite.dart';
 import 'package:aban_tether_challenge/features/coin/domain/usecases/fetch_coin_list.dart';

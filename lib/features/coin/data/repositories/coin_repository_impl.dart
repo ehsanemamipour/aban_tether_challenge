@@ -1,5 +1,4 @@
 import 'package:aban_tether_challenge/core/errors/errors.dart';
-import 'package:aban_tether_challenge/core/storage/secure_storage.dart';
 import 'package:aban_tether_challenge/core/utils/network_utils.dart';
 import 'package:aban_tether_challenge/core/utils/repository_utils.dart';
 import 'package:aban_tether_challenge/features/coin/data/datasource/coin_remote_datasource.dart';
@@ -12,7 +11,7 @@ class CoinRepositoryImpl extends CoinRepository {
     required this.remoteDataSource,
     required this.networkInfo,
   });
-  
+
   final CoinRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
 

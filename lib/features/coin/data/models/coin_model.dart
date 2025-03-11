@@ -11,6 +11,7 @@ class CoinModel extends Coin {
   });
 
   factory CoinModel.fromJson(Map<String, dynamic> json) {
+    
     return CoinModel(
       id: json['id'],
       name: json['name'],

@@ -13,7 +13,7 @@ class Coin extends Equatable {
 
   final int id;
   final String name;
-  final double price;
+  final num price;
   final String symbol;
   final String iconAddress;
   final bool isFavorite;
