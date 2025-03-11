@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:aban_tether_challenge/core/consts/consts.dart';
 import 'package:aban_tether_challenge/core/errors/exceptions.dart';
 import 'package:aban_tether_challenge/core/services/http_service.dart';

@@ -36,4 +36,9 @@ extension CustomeTextStyle on ThemeData {
         fontWeight: FontWeight.bold,
         color: white,
       );
+  TextStyle get bold24 => TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: white,
+      );
 }

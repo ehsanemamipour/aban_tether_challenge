@@ -2,6 +2,7 @@ import 'package:aban_tether_challenge/core/theme/theme.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_event.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_state.dart';
+import 'package:aban_tether_challenge/features/auth/presentation/widgets/profile_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    // Fetch user info when the widget is inserted in the widget tree.
     context.read<AuthBloc>().add(GetUserInfoEvent());
   }
 
@@ -42,16 +44,18 @@ class _ProfilePageState extends State<ProfilePage> {
     final appTheme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile', style: appTheme.medium20),
+        title: Text('Profile', style: appTheme.bold24),
         backgroundColor: appTheme.black,
         centerTitle: true,
+        iconTheme: IconThemeData(color: appTheme.white),
       ),
       backgroundColor: appTheme.black,
       body: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => current is GetUserState || current is AuthError,
         listener: (context, state) {
           if (state is GetUserState) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Profile updated successfully!')),
+              const SnackBar(content: Text('Profile updated successfully!')),
             );
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -59,10 +63,14 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
         },
+        buildWhen: (previous, current) =>
+            current is AuthLoading || current is GetUserState || current is AuthError,
         builder: (context, state) {
           if (state is AuthLoading) {
             return Center(
-              child: CircularProgressIndicator(color: appTheme.white),
+              child: CircularProgressIndicator(
+                color: appTheme.white,
+              ),
             );
           } else if (state is GetUserState) {
             if (!_isPhoneInitialized) {
@@ -71,69 +79,21 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    TextFormField(
-                      initialValue: state.user.name,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        labelStyle: appTheme.medium16,
-                        border: const OutlineInputBorder(),
-                      ),
-                      style: appTheme.medium16.copyWith(color: appTheme.white),
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 16.0),
-                    // Non-editable Email field.
-                    TextFormField(
-                      initialValue: state.user.email,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: appTheme.medium16,
-                        border: const OutlineInputBorder(),
-                      ),
-                      style: appTheme.medium16.copyWith(color: appTheme.white),
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        labelStyle: appTheme.medium16,
-                        border: const OutlineInputBorder(),
-                      ),
-                      style: appTheme.medium16.copyWith(color: appTheme.white),
-                      keyboardType: TextInputType.phone,
-                      validator: _validatePhone,
-                    ),
-                    const SizedBox(height: 24.0),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appTheme.purple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15.0,
-                          horizontal: 30.0,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AuthBloc>().add(
-                                AddUserPhoneEvent(
-                                  phone: _phoneController.text.trim(),
-                                ),
-                              );
-                        }
-                      },
-                      child: Text('Save', style: appTheme.medium16),
-                    ),
-                  ],
-                ),
+              child: ProfileForm(
+                formKey: _formKey,
+                phoneController: _phoneController,
+                user: state.user,
+                appTheme: appTheme,
+                validatePhone: _validatePhone,
+                onSave: () {
+                  if (_formKey.currentState!.validate()) {
+                    context.read<AuthBloc>().add(
+                          AddUserPhoneEvent(
+                            phone: _phoneController.text.trim(),
+                          ),
+                        );
+                  }
+                },
               ),
             );
           } else if (state is AuthError) {
@@ -144,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             );
           }
-          return Container();
+          return const SizedBox.shrink();
         },
       ),
     );
