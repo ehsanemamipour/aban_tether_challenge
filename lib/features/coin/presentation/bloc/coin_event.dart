@@ -7,17 +7,12 @@ abstract class CoinEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginEvent extends CoinEvent {
-  const LoginEvent({required this.email, required this.password});
-  final String email;
-  final String password;
-
-  @override
-  List<Object> get props => [email, password];
+class GetCoinListEvent extends CoinEvent {
+  const GetCoinListEvent();
 }
 
-class RemoveFavoriteEvent extends CoinEvent {
-  const RemoveFavoriteEvent({required this.coinId});
+class DeleteFavoriteEvent extends CoinEvent {
+  const DeleteFavoriteEvent({required this.coinId});
   final int coinId;
 }
 

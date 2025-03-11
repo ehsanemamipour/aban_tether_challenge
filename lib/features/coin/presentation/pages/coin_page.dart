@@ -40,7 +40,7 @@ class _CoinPageState extends State<CoinPage> {
       ),
       backgroundColor: appTheme.black,
       body: BlocProvider(
-             create: (_) => serviceLocator<CoinBloc>(),
+        create: (_) => serviceLocator<CoinBloc>(),
         child: BlocConsumer<CoinBloc, CoinState>(
           listener: (context, state) {
             if (state is CoinError) {
@@ -87,7 +87,7 @@ class _CoinPageState extends State<CoinPage> {
                       onPressed: () {
                         // Toggle favorite status using respective events.
                         if (coin.isFavorite) {
-                          context.read<CoinBloc>().add(RemoveFavoriteEvent(coinId: coin.id));
+                          context.read<CoinBloc>().add(DeleteFavoriteEvent(coinId: coin.id));
                         } else {
                           context.read<CoinBloc>().add(AddFavoriteEvent(coinId: coin.id));
                         }

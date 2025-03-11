@@ -1,3 +1,4 @@
+import 'package:aban_tether_challenge/features/coin/domain/entities/coin.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class CoinState extends Equatable {
@@ -9,22 +10,18 @@ abstract class CoinState extends Equatable {
 
 class CoinInitial extends CoinState {}
 
-class GetTokenState extends CoinState {
-  const GetTokenState({required this.token});
-  final String token;
-  @override
-  List<Object> get props => [token];
-}
+
 
 class CoinLoaded extends CoinState {
-  const CoinLoaded({required this.coin});
-  final List coin;
+  const CoinLoaded({required this.coins});
+  final List<Coin> coins;
   @override
-  List<Object> get props => [coin];
+  List<Object> get props => [coins];
 }
 
 class CoinLoading extends CoinState {}
 
+class CoinFavoriteSuccess extends CoinState {}
 class CoinError extends CoinState {
   const CoinError({required this.message});
   final String message;
