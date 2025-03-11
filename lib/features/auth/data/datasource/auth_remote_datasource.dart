@@ -30,8 +30,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     try {
       final result = await httpService.getData(ServerPaths.userInfo);
 
-      dynamic data = jsonDecode(result.body);
-      var user = UserModel.fromJson(data);
+      var user = UserModel.fromJson(result.data);
 
       return user;
     } catch (e) {
@@ -46,10 +45,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
         'phone_number': phoneNumber,
       });
 
-      dynamic data = jsonDecode(result.body);
-      var user = UserModel.fromJson(
-        data,
-      );
+      var user = UserModel.fromJson(result.data);
 
       return user;
     } catch (e) {

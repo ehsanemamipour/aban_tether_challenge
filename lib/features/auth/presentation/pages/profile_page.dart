@@ -2,7 +2,6 @@ import 'package:aban_tether_challenge/core/theme/theme.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_event.dart';
 import 'package:aban_tether_challenge/features/auth/presentation/bloc/auth_state.dart';
-import 'package:aban_tether_challenge/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,8 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Dispatch an event to load user details from auth/me.
-    context.read<AuthBloc>().add(GetUserProfileEvent());
+    context.read<AuthBloc>().add(GetUserInfoEvent());
   }
 
   @override
@@ -33,8 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) return 'Phone number is required';
-    // Validate phone numbers: optional '+' followed by 10-15 digits.
-    if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
+    if (!RegExp(r'^(?:\+98|0)9\d{9}$').hasMatch(value)) {
       return 'Enter a valid phone number';
     }
     return null;
@@ -52,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: appTheme.black,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthUpdateSuccess) {
+          if (state is GetUserState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Profile updated successfully!')),
             );
@@ -67,10 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
             return Center(
               child: CircularProgressIndicator(color: appTheme.white),
             );
-          } else if (state is AuthProfileLoaded) {
-            // Initialize phone controller only once with the fetched phone value.
+          } else if (state is GetUserState) {
             if (!_isPhoneInitialized) {
-              _phoneController.text = state.user.phone;
+              _phoneController.text = state.user.phoneNumber ?? '';
               _isPhoneInitialized = true;
             }
             return Padding(
@@ -79,7 +75,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 key: _formKey,
                 child: ListView(
                   children: [
-                    // Non-editable Name field.
                     TextFormField(
                       initialValue: state.user.name,
                       decoration: InputDecoration(
@@ -103,7 +98,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       readOnly: true,
                     ),
                     const SizedBox(height: 16.0),
-                    // Editable Phone Number field.
                     TextFormField(
                       controller: _phoneController,
                       decoration: InputDecoration(
@@ -116,7 +110,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       validator: _validatePhone,
                     ),
                     const SizedBox(height: 24.0),
-                    // Save Button to update phone number via the user/{userId} API.
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: appTheme.purple,
@@ -131,11 +124,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           context.read<AuthBloc>().add(
-                            UpdatePhoneEvent(
-                              userId: state.user.id,
-                              phone: _phoneController.text.trim(),
-                            ),
-                          );
+                                AddUserPhoneEvent(
+                                  phone: _phoneController.text.trim(),
+                                ),
+                              );
                         }
                       },
                       child: Text('Save', style: appTheme.medium16),

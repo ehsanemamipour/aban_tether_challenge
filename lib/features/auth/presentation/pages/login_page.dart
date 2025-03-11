@@ -46,24 +46,21 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: _buildAppBar(appTheme),
       backgroundColor: appTheme.black,
-      body: BlocProvider(
-        create: (_) => serviceLocator<AuthBloc>(),
-        child: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is GetTokenState) {
-              context.go('/coinPage');
-            } else if (state is AuthError) {
-              _showErrorDialog(context, state.message);
-            }
-          },
-          builder: (context, state) {
-            return _buildLoginForm(
-              context: context,
-              appTheme: appTheme,
-              isLoading: state is AuthLoading,
-            );
-          },
-        ),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is GetTokenState) {
+            context.go('/coinPage');
+          } else if (state is AuthError) {
+            _showErrorDialog(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          return _buildLoginForm(
+            context: context,
+            appTheme: appTheme,
+            isLoading: state is AuthLoading,
+          );
+        },
       ),
     );
   }
