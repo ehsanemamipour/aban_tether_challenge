@@ -42,7 +42,6 @@ class _CoinListItemState extends State<CoinListItem> {
           return current is CoinFavoriteSuccess && current.id == widget.coin.id;
         },
         listener: (context, state) {
-     
           if (state is CoinFavoriteSuccess && state.id == widget.coin.id) {
             setState(() {
               _isFavorite = !_isFavorite;
@@ -52,12 +51,15 @@ class _CoinListItemState extends State<CoinListItem> {
         },
         child: ListTile(
           key: ValueKey(widget.coin.id),
-          leading: SvgPicture.network(
-            widget.coin.iconAddress,
-            width: 40,
-            height: 40,
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-          ),
+          leading: widget.coin.iconAddress.isNotEmpty
+              ? SvgPicture.network(
+                  widget.coin.iconAddress,
+                  width: 40,
+                  height: 40,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                  placeholderBuilder: (context) => const CircularProgressIndicator(),
+                )
+              : const Icon(Icons.monetization_on),
           title: Text(
             widget.coin.name,
             style: appTheme.medium16.copyWith(color: appTheme.white),

@@ -30,7 +30,10 @@ class DioService implements HTTPService {
         onResponse: (response, handler) {
           return handler.next(response);
         },
-        onError: (DioException e, handler) {
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
+            await secureStorage.deleteToken();
+          }
           return handler.next(e);
         },
       ),
