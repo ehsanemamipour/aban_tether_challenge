@@ -8,7 +8,7 @@ import 'package:aban_tether_challenge/features/auth/data/models/user_model.dart'
 abstract class AuthRemoteDataSource {
   Future<String> fetchToken(String email, String password);
   Future<UserModel> fetchUserInfo();
-  Future<UserModel> adduserPhoneNumber(String phoneNumber);
+  Future<UserModel> addUserPhoneNumber(String phoneNumber);
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -40,7 +40,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> adduserPhoneNumber(String phoneNumber) async {
+  Future<UserModel> addUserPhoneNumber(String phoneNumber) async {
     try {
       final result = await httpService.putData(ServerPaths.userPhoneNumber, data: {
         'phone_number': phoneNumber,
