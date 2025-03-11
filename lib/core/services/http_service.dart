@@ -5,10 +5,11 @@ abstract class HTTPService<T> {
   Future<T> getData(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? header});
   Future<T> postData(String url, {dynamic data, Map<String, dynamic>? header});
   Future<T> putData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header});
+  Future<T> deleteData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header});
 }
 
 class DioService implements HTTPService {
-  DioService({required this.dio,required this.secureStorage}) {
+  DioService({required this.dio, required this.secureStorage}) {
     _initializeInterceptors();
   }
 
@@ -16,13 +17,10 @@ class DioService implements HTTPService {
   final Dio dio;
   final SecureStorage secureStorage;
 
-
-
   void _initializeInterceptors() {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-   
           String? token = await secureStorage.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
@@ -53,5 +51,10 @@ class DioService implements HTTPService {
   @override
   Future putData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header}) {
     return dio.put(url, data: data, options: Options(headers: header));
+  }
+
+  @override
+  Future deleteData(String url, {Map<String, dynamic>? data, Map<String, dynamic>? header}) {
+    return dio.delete(url, data: data, options: Options(headers: header));
   }
 }
